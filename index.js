@@ -8,6 +8,7 @@ class Bframe {
     this.$nextTickQueue = [];
     this.initializeDOM();
     this.runMounted();
+    this.observeDOM();
   }
 
   getHandler() {
@@ -46,8 +47,11 @@ class Bframe {
   }
 
   initializeDOM() {
-    const bindings = Array.from(this.$el.querySelectorAll("[b-model]"));
-    bindings.forEach((element) => {
+    this.bindElements(this.$el.querySelectorAll("[b-model]"));
+  }
+
+  bindElements(elements) {
+    elements.forEach((element) => {
       const key = element.getAttribute("b-model");
       this.updateElement(element, this.$data[key]);
       if (element.tagName == "INPUT" || element.tagName == "TEXTAREA") {
@@ -62,6 +66,18 @@ class Bframe {
         }
       }
     });
+  }
+
+  observeDOM() {
+    const observer = new MutationObserver((mutationsList, observer) => {
+      for(let mutation of mutationsList) {
+        if (mutation.type === 'childList') {
+          this.bindElements(mutation.target.querySelectorAll("[b-model]"));
+        }
+      }
+    });
+
+    observer.observe(this.$el, { childList: true, subtree: true });
   }
 
   updateDOM(key) {

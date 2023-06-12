@@ -13,7 +13,6 @@
       <input type="radio" name="aa" id="2" b-model="aa" value="2" />
       <button onclick="app.$methods.updateMessage()">Change Message</button>
     </div>
-    <script src="./polyfill.js"></script>
     <script src="./index.js"></script>
     <script>
       const app = new Bframe({
@@ -28,7 +27,12 @@
             this.$data.message = "테스트!";
             this.nextTick(() => {
               console.log("돔 변경");
+              console.log(this.$data)
             });
+            const p = document.createElement("p");
+            p.setAttribute('b-model',"count");
+            const appDiv = document.getElementById('app');
+            appDiv.appendChild(p);
           },
         },
         mounted() {
