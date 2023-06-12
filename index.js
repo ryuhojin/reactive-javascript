@@ -17,7 +17,7 @@ class Bframe {
         const result = Reflect.set(target, key, value, receiver);
         this.updateDOM(key);
         return result;
-      }
+      },
     };
   }
 
@@ -46,26 +46,40 @@ class Bframe {
   }
 
   initializeDOM() {
-    const bindings = Array.from(this.$el.querySelectorAll('[b-model]'));
-    bindings.forEach(element => {
-      const key = element.getAttribute('b-model');
+    const bindings = Array.from(this.$el.querySelectorAll("[b-model]"));
+    bindings.forEach((element) => {
+      const key = element.getAttribute("b-model");
       this.updateElement(element, this.$data[key]);
-      element.addEventListener('input', e => {
-        this.$data[key] = e.target.value;
-      });
+      if (element.tagName == "INPUT" || element.tagName == "TEXTAREA") {
+        if (element.type != "radio" && element.type != "checkbox") {
+          element.addEventListener("input", (e) => {
+            this.$data[key] = e.target.value;
+          });
+        } else {
+          element.addEventListener("click", (e) => {
+            this.$data[key] = e.target.value;
+          });
+        }
+      }
     });
   }
 
   updateDOM(key) {
     const bindings = Array.from(this.$el.querySelectorAll(`[b-model=${key}]`));
-    bindings.forEach(element => {
+    bindings.forEach((element) => {
       this.updateElement(element, this.$data[key]);
     });
   }
 
   updateElement(element, value) {
-    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-      element.value = value;
+    if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") {
+      if (element.type != "radio" && element.type != "checkbox") {
+        element.value = value;
+      }else{
+        if(element.value == value){
+            element.checked=true;
+        }
+      }
     } else {
       element.textContent = value;
     }

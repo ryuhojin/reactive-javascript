@@ -7,30 +7,34 @@
   <style></style>
   <body>
     <div id="app">
-      <input type="text" b-model="message">
+      <input type="text" b-model="message" />
       <span b-model="message"></span>
+      <input type="radio" name="aa" id="1" b-model="aa" value="1" />
+      <input type="radio" name="aa" id="2" b-model="aa" value="2" />
       <button onclick="app.$methods.updateMessage()">Change Message</button>
     </div>
-    
+    <script src="./polyfill.js"></script>
     <script src="./index.js"></script>
     <script>
-       const app = new Bframe({
-      el: '#app',
-      data: {
-        message: '잘되니?',
-        count: 0
-      },
-      methods: {
-        updateMessage() {
-          this.$data.message = '테스트!';
-          this.nextTick(() => {
-            console.log('돔 변경');
-          });
-        }
-      },
-      mounted: function() {
-      }
-    });
+      const app = new Bframe({
+        el: "#app",
+        data: {
+          message: "잘되니?",
+          count: 0,
+          aa: "1",
+        },
+        methods: {
+          updateMessage() {
+            this.$data.message = "테스트!";
+            this.nextTick(() => {
+              console.log("돔 변경");
+            });
+          },
+        },
+        mounted() {
+          console.log("마운팅");
+        },
+      });
     </script>
   </body>
 </html>
